@@ -40,7 +40,7 @@ const POLICE_PRICES={'Brændstof dele':{Alternator:1650,Brakes:220,'Fuel Injecto
 const state={customer:'civil',type:'fuel',repMode:'auto',category:'rep',selected:{},records:[],user:null,employee:'',page:'price',channel:null};
 const $=id=>document.getElementById(id),key=(cat,g,item)=>cat.id+'|'+g.name+'|'+item[0],money=n=>CURRENCY+' '+Math.round(Number(n)||0).toLocaleString('da-DK'),pad=n=>String(n).padStart(2,'0');
 function nowLocal(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes())}function fmtTime(s){if(!s)return'';const[d,t='']=s.split('T');const[y,m,day]=d.split('-');return `${day}-${m}-${y} ${t}`}function escapeEmailPart(s){return s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'.').replace(/^\.|\.$/g,'')}
-// User accounts are provisioned by an administrator in Supabase; the UI has no public sign-up.
+
 function authEmail(first,last){return `${escapeEmailPart(first)}.${escapeEmailPart(last)}@login.autoexotic.dk`}
 function showLogin(message=''){ $('login-view').hidden=false;$('app').hidden=true;$('login-message').textContent=message;$('login-message').classList.toggle('error',!!message)}
 function showApp(){ $('login-view').hidden=true;$('app').hidden=false;$('user-name').textContent=state.employee;setPage(state.page);startSync() }
