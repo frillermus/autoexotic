@@ -5,763 +5,98 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prisliste – Værksted</title>
 <style>
-:root{
-  --bg:#dfe4e8; --panel:#f6f8f9; --ink:#12263d; --muted:#5d6b7a;
-  --line:#c3ccd4; --accent:#d9480f; --sel:#e4edf6; --red:#b42318;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font-family:Bahnschrift,"Segoe UI",system-ui,Arial,sans-serif;line-height:1.45}
-header{background:var(--ink);color:#fff;padding:18px 24px;display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}
-header h1{margin:0;font-size:1.5rem;letter-spacing:.02em}
-header span{color:#a9b8c8;font-size:.95rem}
-.wrap{max-width:1250px;margin:0 auto;padding:20px;display:grid;grid-template-columns:1fr 370px;gap:20px;align-items:start}
-@media(max-width:920px){.wrap{grid-template-columns:1fr}}
-h2{font-size:1.05rem;margin:0 0 10px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;margin-bottom:16px}
-.valg{display:flex;flex-wrap:wrap;gap:8px}
-.valg button{font:inherit;padding:11px 16px;border:2px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:6px;cursor:pointer;font-weight:600;flex:1 1 120px}
-.valg button:hover{border-color:var(--ink)}
-.valg button.aktiv{background:var(--ink);border-color:var(--ink);color:#fff}
-.valg small{display:block;font-weight:400;opacity:.8}
-.hint{margin:10px 0 0;font-size:.92rem;color:var(--muted)}
-input[type=search],input[type=text],input[type=number]{font:inherit;padding:9px 10px;border:1px solid var(--line);
-  border-radius:6px;background:#fff;color:var(--ink);width:100%}
-.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.tabs button{font:inherit;font-weight:700;padding:10px 16px;border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:6px;cursor:pointer}
-.tabs button.aktiv{background:var(--ink);color:#fff}
-.tabs b{display:inline-block;min-width:20px;margin-left:6px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:.8rem}
-.kat h2{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--ink);padding-bottom:6px}
-.kat h2 button{font:inherit;font-size:.8rem;background:none;border:1px solid var(--line);border-radius:4px;padding:2px 8px;cursor:pointer;color:var(--muted)}
-.sek{margin:18px 0 8px;font-size:1.15rem}
-.vare{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:8px 6px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:4px}
-.vare:hover{background:#eaeff3}
-.vare.valgt{background:var(--sel)}
-.vare input{width:20px;height:20px;accent-color:var(--accent);pointer-events:none}
-.ulovlig{display:inline-block;margin-left:8px;padding:0 7px;border-radius:10px;background:var(--red);color:#fff;font-size:.75rem;font-weight:700}
-.pris{font-variant-numeric:tabular-nums;font-weight:700;min-width:90px;text-align:right}
-.antal{display:flex;align-items:center;gap:4px;visibility:hidden}
-.vare.valgt .antal{visibility:visible}
-.vare.enkelt .antal{display:none}
-.antal button{width:28px;height:28px;border:1px solid var(--line);background:#fff;border-radius:4px;font:inherit;cursor:pointer;color:var(--ink)}
-.antal span{min-width:22px;text-align:center;font-weight:600}
-.sum{position:sticky;top:12px}
-.sum ul{list-style:none;margin:0 0 12px;padding:0;max-height:34vh;overflow:auto}
-.sum li{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line);font-size:.95rem}
-.sum li em{font-style:normal;color:var(--muted)}
-.tom{color:var(--muted)}
-.rad{display:flex;justify-content:space-between;padding:3px 0;font-variant-numeric:tabular-nums}
-.total{font-size:1.5rem;font-weight:700;border-top:2px solid var(--ink);margin-top:8px;padding-top:8px}
-.felter{display:grid;grid-template-columns:1fr 90px;gap:8px;margin:10px 0}
-.knapper{display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-top:12px}
-.knapper button{font:inherit;font-weight:700;padding:12px;border-radius:6px;border:2px solid var(--ink);cursor:pointer}
-.kopier{background:var(--accent);border-color:var(--accent)!important;color:#fff}
-.nulstil{background:#fff;color:var(--ink)}
-.besked{min-height:1.3em;font-size:.9rem;color:var(--muted);margin-top:6px}
-[hidden]{display:none!important}
-.disc{margin-top:12px;font-size:.9rem;color:var(--muted)}
-.disc summary{cursor:pointer}
-.disc input{margin-top:6px}
-.sagfelter{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:560px){.sagfelter{grid-template-columns:1fr}}
-.sagfelter label{display:flex;flex-direction:column;gap:3px;font-size:.88rem;color:var(--muted)}
-.sagfelter .bred{grid-column:1/-1}
-.sagfelter .tjek{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:1rem}
-.sagfelter .tjek input{width:20px;height:20px;accent-color:var(--accent)}
-.gem{display:block;width:100%;margin-top:8px;font:inherit;font-weight:700;padding:12px;border-radius:6px;border:2px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
-.fakt-info{font-size:.9rem;color:var(--muted);margin:8px 0}
-.sager{list-style:none;margin:8px 0;padding:0;max-height:30vh;overflow:auto}
-.sager li{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
-.sager li small{display:block;color:var(--muted)}
-.sager button{font:inherit;border:1px solid var(--line);background:#fff;border-radius:4px;cursor:pointer;color:var(--muted);padding:0 8px}
+:root{--bg:#dfe4e8;--panel:#f6f8f9;--ink:#12263d;--muted:#5d6b7a;--line:#c3ccd4;--accent:#d9480f;--sel:#e4edf6;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Bahnschrift,"Segoe UI",system-ui,Arial,sans-serif;line-height:1.45}
+header{background:var(--ink);color:#fff;padding:18px 24px;display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}header h1{margin:0;font-size:1.5rem;letter-spacing:.02em}header span{color:#a9b8c8;font-size:.95rem}
+.wrap{max-width:1250px;margin:0 auto;padding:20px;display:grid;grid-template-columns:1fr 370px;gap:20px;align-items:start}@media(max-width:920px){.wrap{grid-template-columns:1fr}}
+h2{font-size:1.05rem;margin:0 0 10px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;margin-bottom:16px}
+.valg{display:flex;flex-wrap:wrap;gap:8px}.valg button{font:inherit;padding:11px 16px;border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:6px;cursor:pointer;font-weight:600;flex:1 1 120px}.valg button:hover{border-color:var(--ink)}.valg button.aktiv{background:var(--ink);border-color:var(--ink);color:#fff}.valg small{display:block;font-weight:400;opacity:.8}
+.hint{margin:10px 0 0;font-size:.92rem;color:var(--muted)}input[type=search],input[type=text],input[type=number]{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);width:100%}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}.tabs button,.historik-tabs button{font:inherit;font-weight:700;padding:10px 16px;border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:6px;cursor:pointer}.tabs button.aktiv,.historik-tabs button.aktiv{background:var(--ink);color:#fff}.tabs b{display:inline-block;min-width:20px;margin-left:6px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:.8rem}
+.kat h2{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--ink);padding-bottom:6px}.kat h2 button{font:inherit;font-size:.8rem;background:none;border:1px solid var(--line);border-radius:4px;padding:2px 8px;cursor:pointer;color:var(--muted)}.sek{margin:18px 0 8px;font-size:1.15rem}
+.vare{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:8px 6px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:4px}.vare:hover{background:#eaeff3}.vare.valgt{background:var(--sel)}.vare input{width:20px;height:20px;accent-color:var(--accent);pointer-events:none}.ulovlig{display:inline-block;margin-left:8px;padding:0 7px;border-radius:10px;background:var(--red);color:#fff;font-size:.75rem;font-weight:700}.pris{font-variant-numeric:tabular-nums;font-weight:700;min-width:90px;text-align:right}
+.antal{display:flex;align-items:center;gap:4px;visibility:hidden}.vare.valgt .antal{visibility:visible}.vare.enkelt .antal{display:none}.antal button{width:28px;height:28px;border:1px solid var(--line);background:#fff;border-radius:4px;font:inherit;cursor:pointer;color:var(--ink)}.antal span{min-width:22px;text-align:center;font-weight:600}
+.sum{position:sticky;top:12px}.sum ul{list-style:none;margin:0 0 12px;padding:0;max-height:34vh;overflow:auto}.sum li{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line);font-size:.95rem}.sum li em{font-style:normal;color:var(--muted)}.tom{color:var(--muted)}.rad{display:flex;justify-content:space-between;padding:3px 0;font-variant-numeric:tabular-nums}.total{font-size:1.5rem;font-weight:700;border-top:2px solid var(--ink);margin-top:8px;padding-top:8px}
+.felter{display:grid;grid-template-columns:1fr 90px;gap:8px;margin:10px 0}.knapper{display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-top:12px}.knapper button{font:inherit;font-weight:700;padding:12px;border-radius:6px;border:2px solid var(--ink);cursor:pointer}.kopier{background:var(--accent);border-color:var(--accent)!important;color:#fff}.nulstil{background:#fff;color:var(--ink)}.besked{min-height:1.3em;font-size:.9rem;color:var(--muted);margin-top:6px}[hidden]{display:none!important}
+.disc{margin-top:12px;font-size:.9rem;color:var(--muted)}.disc summary{cursor:pointer}.disc input{margin-top:6px}.sagfelter{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:560px){.sagfelter{grid-template-columns:1fr}}.sagfelter label{display:flex;flex-direction:column;gap:3px;font-size:.88rem;color:var(--muted)}.sagfelter .bred{grid-column:1/-1}.sagfelter .tjek{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:1rem}.sagfelter .tjek input{width:20px;height:20px;accent-color:var(--accent)}
+.gem{display:block;width:100%;margin-top:8px;font:inherit;font-weight:700;padding:12px;border-radius:6px;border:2px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}.fakt-info{font-size:.9rem;color:var(--muted);margin:8px 0}.sager{list-style:none;margin:8px 0;padding:0;max-height:30vh;overflow:auto}.sager li{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line);font-size:.92rem}.sager li small{display:block;color:var(--muted)}.sager button{font:inherit;border:1px solid var(--line);background:#fff;border-radius:4px;cursor:pointer;color:var(--muted);padding:0 8px}
+.historik-tabs{display:flex;gap:6px;margin:8px 0 12px;flex-wrap:wrap}.sag-detaljer,.civil-detaljer{grid-column:1/-1;color:var(--muted);font-size:.9rem;padding:4px 0 8px}.sag-detaljer summary,.civil-detaljer summary{cursor:pointer;color:var(--ink);font-weight:600}.sag-detaljer ul,.civil-detaljer ul{margin:6px 0 0;padding-left:20px}.sager li .sag-slet{grid-column:3;grid-row:1}.civil-sager{list-style:none;margin:8px 0;padding:0;max-height:45vh;overflow:auto}.civil-sager li{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}.civil-sager small{display:block;color:var(--muted)}.civil-sager button{font:inherit;border:1px solid var(--line);background:#fff;border-radius:4px;cursor:pointer;color:var(--muted);padding:0 8px}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 </style>
 </head>
 <body>
-
-<header>
-  <h1 id="firmanavn"></h1>
-  <span>Prisliste</span>
-</header>
-
-<div class="wrap">
-  <main>
-    <section class="panel">
-      <h2>1. Vælg kunde</h2>
-      <div class="valg" id="kunder"></div>
-    </section>
-
-    <section class="panel">
-      <h2>2. Vælg bil</h2>
-      <div class="valg" id="typer"></div>
-    </section>
-
-    <section class="panel" id="sagpanel" hidden>
-      <h2>Sagsoplysninger (politi)</h2>
-      <div class="sagfelter">
-        <label>Afsendende politistation
-          <input type="text" id="sag-station" placeholder="fx Alta PG"></label>
-        <label>Dato og tidspunkt for modtagelse
-          <input type="datetime-local" id="sag-tid"></label>
-        <label>Bilens mærke og model
-          <input type="text" id="sag-bil" placeholder="fx Passat"></label>
-        <label>Registreringsnummer
-          <input type="text" id="sag-reg" placeholder="Nummerplade"></label>
-        <label>Hvem kom med bilen
-          <input type="text" id="sag-afleveret" placeholder="Navn"></label>
-        <label>Samlet arbejdstid
-          <input type="text" id="sag-arbejde" placeholder="fx 45 min"></label>
-        <label class="tjek bred"><input type="checkbox" id="sag-ladbil"> Køretøjet er leveret via ladbil</label>
-      </div>
-      <p class="hint">Aftalen kræver, at disse oplysninger dokumenteres for hver sag. Materialer er de valgte dele.</p>
-    </section>
-
-    <section class="panel">
-      <h2>3. REP</h2>
-      <div class="valg" id="rep"></div>
-      <p class="hint" id="rephint"></p>
-    </section>
-
-    <section class="panel">
-      <h2>4. Vælg varer</h2>
-      <input type="search" id="soeg" placeholder="Søg i hele prislisten…" aria-label="Søg">
-    </section>
-
-    <div class="tabs" id="tabs"></div>
-    <div id="kategorier"></div>
-  </main>
-
-  <aside class="sum">
-    <section class="panel">
-      <h2>Kvittering</h2>
-      <div class="felter">
-        <input type="text" id="kunde" placeholder="Kundens navn / nummerplade">
-        <input type="number" id="rabat" min="0" max="100" value="0" aria-label="Rabat i procent" title="Rabat i %">
-      </div>
-      <ul id="linjer"></ul>
-      <div class="rad"><span>Antal dele</span><span id="antaldele"></span></div>
-      <div class="rad"><span>Dele</span><span id="s-dele"></span></div>
-      <div class="rad"><span>REP</span><span id="s-rep"></span></div>
-      <div class="rad"><span>Cosmetics</span><span id="s-cos"></span></div>
-      <div class="rad"><span>Upgrades</span><span id="s-upg"></span></div>
-      <div class="rad"><span>Rabat</span><span id="s-rabat"></span></div>
-      <div class="rad total"><span>Total</span><span id="total"></span></div>
-      <div class="knapper">
-        <button class="kopier" id="kopier">Kopiér kvittering</button>
-        <button class="nulstil" id="nulstil">Ryd</button>
-      </div>
-      <button class="gem" id="send">Send til Discord</button>
-      <button class="gem" id="gem" hidden>Gem sag til månedsfaktura</button>
-      <div class="besked" id="besked"></div>
-      <details class="disc">
-        <summary>Discord-indstillinger</summary>
-        <input type="password" id="webhook" placeholder="Indsæt webhook-link her" autocomplete="off" aria-label="Discord webhook-link">
-        <p class="hint">Linket gemmes kun i denne browser, ikke i filen.</p>
-      </details>
-    </section>
-
-    <section class="panel" id="fakturapanel" hidden>
-      <h2>Månedsfaktura – politi</h2>
-      <input type="month" id="fak-maaned" aria-label="Vælg måned">
-      <p class="fakt-info" id="fak-info"></p>
-      <ul class="sager" id="sager"></ul>
-      <div class="rad total"><span id="fak-antal"></span><span id="fak-total"></span></div>
-      <button class="gem" id="fak-kopier">Kopiér månedsfaktura</button>
-      <button class="gem" id="fak-send">Send månedsfaktura til Discord</button>
-      <div class="besked" id="fak-besked"></div>
-    </section>
-  </aside>
-</div>
-
+<header><h1 id="firmanavn"></h1><span>Prisliste</span></header>
+<div class="wrap"><main>
+<section class="panel"><h2>1. Vælg kunde</h2><div class="valg" id="kunder"></div></section>
+<section class="panel"><h2>2. Vælg bil</h2><div class="valg" id="typer"></div></section>
+<section class="panel" id="sagpanel" hidden><h2>Sagsoplysninger (politi)</h2><div class="sagfelter">
+<label>Afsendende politistation<input type="text" id="sag-station" placeholder="fx Alta PG"></label><label>Dato og tidspunkt for modtagelse<input type="datetime-local" id="sag-tid"></label><label>Bilens mærke og model<input type="text" id="sag-bil" placeholder="fx Passat"></label><label>Registreringsnummer<input type="text" id="sag-reg" placeholder="Nummerplade"></label><label>Hvem kom med bilen<input type="text" id="sag-afleveret" placeholder="Navn"></label><label>Samlet arbejdstid<input type="text" id="sag-arbejde" placeholder="fx 45 min"></label><label class="tjek bred"><input type="checkbox" id="sag-ladbil"> Køretøjet er leveret via ladbil</label></div><p class="hint">Aftalen kræver, at disse oplysninger dokumenteres for hver sag. Materialer er de valgte dele.</p></section>
+<section class="panel"><h2>3. REP</h2><div class="valg" id="rep"></div><p class="hint" id="rephint"></p></section>
+<section class="panel"><h2>4. Vælg varer</h2><input type="search" id="soeg" placeholder="Søg i hele prislisten…" aria-label="Søg"></section><div class="tabs" id="tabs"></div><div id="kategorier"></div>
+</main><aside class="sum"><section class="panel"><h2>Kvittering</h2><div class="felter"><input type="text" id="kunde" placeholder="Kundens navn / nummerplade"><input type="number" id="rabat" min="0" max="100" value="0" aria-label="Rabat i procent" title="Rabat i %"></div><ul id="linjer"></ul>
+<div class="rad"><span>Antal dele</span><span id="antaldele"></span></div><div class="rad"><span>Dele</span><span id="s-dele"></span></div><div class="rad"><span>REP</span><span id="s-rep"></span></div><div class="rad"><span>Cosmetics</span><span id="s-cos"></span></div><div class="rad"><span>Upgrades</span><span id="s-upg"></span></div><div class="rad"><span>Rabat</span><span id="s-rabat"></span></div><div class="rad total"><span>Total</span><span id="total"></span></div>
+<div class="knapper"><button class="kopier" id="kopier">Kopiér kvittering</button><button class="nulstil" id="nulstil">Ryd</button></div><button class="gem" id="send">Send til Discord</button><button class="gem" id="gem" hidden>Gem sag til månedsfaktura</button><button class="gem" id="gem-civil">Gem kvittering i historik</button><div class="besked" id="besked"></div><details class="disc"><summary>Discord-indstillinger</summary><input type="password" id="webhook" placeholder="Indsæt webhook-link her" autocomplete="off" aria-label="Discord webhook-link"><p class="hint">Linket gemmes kun i denne browser, ikke i filen.</p></details></section>
+<section class="panel"><h2>Historik</h2><div class="historik-tabs"><button id="tab-faktura" type="button">Månedsfaktura – politi</button><button id="tab-civile" type="button">Kvitteringer – civile</button></div>
+<section id="fakturapanel" hidden><h2>Månedsfaktura – politi</h2><input type="month" id="fak-maaned" aria-label="Vælg måned"><p class="fakt-info" id="fak-info"></p><ul class="sager" id="sager"></ul><div class="rad total"><span id="fak-antal"></span><span id="fak-total"></span></div><button class="gem" id="fak-kopier">Kopiér månedsfaktura</button><button class="gem" id="fak-send">Send månedsfaktura til Discord</button><div class="besked" id="fak-besked"></div></section>
+<section id="civilpanel" hidden><h2>Seneste civile reparationer</h2><p class="fakt-info">Kvitteringer gemt i denne browser. Listen viser de seneste 30.</p><ul class="civil-sager" id="civil-sager"></ul></section></section>
+</aside></div>
 <script>
-/* ============================================================
-   RET HER – priser og indstillinger
-   ============================================================ */
-const FIRMANAVN = "Auto Exotic";
-const VALUTA = "kr";
-
-// Bil-typer
-const TYPER = [
-  { id: "fuel", navn: "Brændstofsbil" },
-  { id: "el",   navn: "Elbil" }
-];
-
-// REP-priser (ekskl. dele)
-const REP = {
-  fuel: [
-    { id: "mindre", navn: "Mindre REP", pris: 1250 },
-    { id: "mellem", navn: "Mellem REP", pris: 2500 },
-    { id: "stor",   navn: "Stor REP",   pris: 5000 }
-  ],
-  el: [
-    { id: "el", navn: "EL REP", pris: 5000 }
-  ]
-};
-
-/* AUTO-VALG AF REP ud fra antal dele valgt (Brændstofsbil).
-   Regler: 0 dele = ingen REP, 1-2 dele = Mindre, 3-4 dele = Mellem, 5+ dele = Stor.
-   Elbil vælger altid EL REP (så snart der er mindst 1 del). */
-const REP_GRAENSER = [
-  { op_til: 2,        id: "mindre" },
-  { op_til: 4,        id: "mellem" },
-  { op_til: Infinity, id: "stor" }
-];
-
-/* KUNDER: Civil bruger priserne i listen nedenfor. Politi bruger POLITI_PRISER
-   (kun dele) og en fast REP-pris. Cosmetics og Upgrades vises ikke for politi. */
-const KUNDER = [
-  { id: "civil", navn: "Civil" },
-  { id: "politi", navn: "Politi" }
-];
-// Valgfrit: webhook-link kan stå her, men så ligger det i filen, hvis du deler den.
-// Lader du feltet stå tomt, indsætter du i stedet linket i "Discord-indstillinger" på siden.
-const WEBHOOK_URL = "";
-
-// Aftale med politiet: én samlet faktura pr. måned, udstedt sidste dag i måneden.
-const FAKTURA_FRIST_DAGE = 15;      // betalingsfrist i dage
-// Fast REP for politi (uanset biltype). Vælges automatisk når der er mindst 1 del.
-const REP_POLITI = [
-  { id: "politi", navn: "Politi REP", pris: 3000 }
-];
-// Politi-priser pr. gruppe -> vare. Varer der ikke står her bruger civil-prisen.
-const POLITI_PRISER = {
-  "Brændstof dele": { "Alternator": 1650, "Brakes": 220, "Fuel Injector": 2100, "Power Steering Pump": 2500, "Radiator": 1450, "Transmission": 4550 },
-  "Kerne dele EV":  { "EV Battery": 4950, "Electric Motor": 3300, "Brakes": 220 },
-  "Service dele":   { "Air Filter": 400, "Brake Pads": 950, "Drive Belt": 550, "Fuel Filter": 700, "High Voltage Wiring": 1150, "Oil Filter": 550, "Spark Plugs": 970, "Tire": 440 },
-  "Væsker":         { "Battery Coolant": 200, "Brake Fluid": 200, "Coolant": 200, "Steering Fluid": 200, "Transmission Fluid": 200 },
-  "Bil dele":       { "Vehicle Door": 550, "Vehicle Hood": 1370, "Vehicle Trunk": 1100, "Vehicle Wheel": 500, "Vehicle Window": 300 }
-};
-
-/* Opbygning: sektion -> grupper -> varer.
-   kun: "fuel" / "el"  = gruppen vises kun for den biltype
-   dele: true          = tæller med i "Antal dele"
-   eksklusiv: true     = kun ét valg i gruppen (fx Level 1-5)
-   ulovlig: true       = vises med "Ulovlig"-mærke */
-const SEKTIONER = [
-  { id: "rep", navn: "Dele", grupper: [
-    { navn: "Brændstof dele", kun: "fuel", dele: true, varer: [
-      { navn: "Alternator", pris: 1650 },
-      { navn: "Brakes", pris: 220 },
-      { navn: "Fuel Injector", pris: 2100 },
-      { navn: "Power Steering Pump", pris: 2500 },
-      { navn: "Radiator", pris: 1400 },
-      { navn: "Transmission", pris: 4400 }
-    ]},
-    { navn: "Kerne dele EV", kun: "el", dele: true, varer: [
-      { navn: "EV Battery", pris: 4950 },
-      { navn: "Electric Motor", pris: 3300 },
-      { navn: "Brakes", pris: 220 }
-    ]},
-    { navn: "Service dele", dele: true, varer: [
-      { navn: "Air Filter", pris: 450 },
-      { navn: "Brake Pads", pris: 1050 },
-      { navn: "Drive Belt", pris: 600 },
-      { navn: "Fuel Filter", pris: 750 },
-      { navn: "High Voltage Wiring", pris: 1250 },
-      { navn: "Oil Filter", pris: 550 },
-      { navn: "Spark Plugs", pris: 1050 },
-      { navn: "Tire", pris: 500 }
-    ]},
-    { navn: "Væsker", dele: true, varer: [
-      { navn: "Battery Coolant", pris: 210 },
-      { navn: "Brake Fluid", pris: 210 },
-      { navn: "Coolant", pris: 120 },
-      { navn: "Steering Fluid", pris: 250 },
-      { navn: "Transmission Fluid", pris: 200 }
-    ]},
-    { navn: "Bil dele", dele: true, varer: [
-      { navn: "Vehicle Door", pris: 600 },
-      { navn: "Vehicle Hood", pris: 1500 },
-      { navn: "Vehicle Trunk", pris: 1200 },
-      { navn: "Vehicle Wheel", pris: 250 },
-      { navn: "Vehicle Window", pris: 300 }
-    ]}
-  ]},
-
-  { id: "cos", navn: "Cosmetics", grupper: [
-    { navn: "Random", varer: [
-      { navn: "Horns", pris: 200 },
-      { navn: "Window tint", pris: 600 },
-      { navn: "Wings", pris: 1000 },
-      { navn: "Nummerplade", pris: 400 }
-    ]},
-    { navn: "Head lights", varer: [
-      { navn: "Xenon", pris: 500 },
-      { navn: "Color", pris: 500 },
-      { navn: "Neon", pris: 600 }
-    ]},
-    { navn: "Respray", varer: [
-      { navn: "Perlecent", pris: 300 },
-      { navn: "Fave 1", pris: 200 },
-      { navn: "Fave 2", pris: 200 },
-      { navn: "StickerKit", pris: 18750 }
-    ]},
-    { navn: "Body Parts", varer: [
-      { navn: "Cage", pris: 600 },
-      { navn: "Front bumper", pris: 1700 },
-      { navn: "Grill", pris: 750 },
-      { navn: "Hood", pris: 750 },
-      { navn: "Left Fender", pris: 1000 },
-      { navn: "Rear bumper", pris: 750 },
-      { navn: "Right Fender", pris: 1000 },
-      { navn: "Roof", pris: 1400 },
-      { navn: "Side skirt", pris: 1400 },
-      { navn: "Spoiler", pris: 1650 },
-      { navn: "Udstødning", pris: 500 }
-    ]},
-    { navn: "Motorrum", varer: [
-      { navn: "Luft Filter", pris: 800 },
-      { navn: "Motorblok", pris: 2000 },
-      { navn: "Struts", pris: 1700 },
-      { navn: "Aerials", pris: 200 }
-    ]},
-    { navn: "Interior", varer: [
-      { navn: "Dashboard", pris: 750 },
-      { navn: "Door Speakers", pris: 600 },
-      { navn: "Interior Trim", pris: 900 },
-      { navn: "Seats", pris: 750 },
-      { navn: "Wheel", pris: 600 }
-    ]},
-    { navn: "Dæk", varer: [
-      { navn: "Custom dæk", pris: 300 },
-      { navn: "Røg", pris: 700 },
-      { navn: "Fave", pris: 450 },
-      { navn: "Hjul type", pris: 450 }
-    ]}
-  ]},
-
-  { id: "upg", navn: "Upgrades", grupper: [
-    { navn: "Armor", eksklusiv: true, varer: [
-      { navn: "Level 1", pris: 35000 }, { navn: "Level 2", pris: 50000 },
-      { navn: "Level 3", pris: 65000 }, { navn: "Level 4", pris: 80000 },
-      { navn: "Level 5", pris: 95000 }
-    ]},
-    { navn: "Engine", eksklusiv: true, varer: [
-      { navn: "Level 1", pris: 65000 }, { navn: "Level 2", pris: 95000 },
-      { navn: "Level 3", pris: 130000, ulovlig: true }, { navn: "Level 4", pris: 160000, ulovlig: true }
-    ]},
-    { navn: "Suspension", eksklusiv: true, varer: [
-      { navn: "Level 1", pris: 10500 }, { navn: "Level 2", pris: 15000 },
-      { navn: "Level 3", pris: 22500, ulovlig: true }, { navn: "Level 4", pris: 30000, ulovlig: true }
-    ]},
-    { navn: "Transmission", eksklusiv: true, varer: [
-      { navn: "Level 1", pris: 35000 }, { navn: "Level 2", pris: 55000 },
-      { navn: "Level 3", pris: 70000, ulovlig: true }
-    ]},
-    { navn: "Brakes", eksklusiv: true, varer: [
-      { navn: "Level 1", pris: 35000 }, { navn: "Level 2", pris: 50000 },
-      { navn: "Level 3", pris: 70000, ulovlig: true }
-    ]},
-    { navn: "Turbo", eksklusiv: true, varer: [
-      { navn: "Lovlig", pris: 50000 }, { navn: "Ulovlig", pris: 55000, ulovlig: true }
-    ]}
-  ]}
-];
-/* ============================================================ */
-
-const state = { kunde: "civil", type: TYPER[0].id, repMode: "auto", tab: SEKTIONER[0].id, valgt: {} };
-const $ = id => document.getElementById(id);
-const K = (s, g, v) => s.id + "|" + g.navn + "|" + v.navn;
-const kr = n => VALUTA + " " + Math.round(n).toLocaleString("da-DK");
-const synlig = g => !g.kun || g.kun === state.type;
-const repOpts = () => state.kunde === "politi" ? REP_POLITI : REP[state.type];
-const sektioner = () => state.kunde === "politi" ? SEKTIONER.filter(s => s.id === "rep") : SEKTIONER;
-const prisFor = (g, v) => (state.kunde === "politi" && POLITI_PRISER[g.navn] && POLITI_PRISER[g.navn][v.navn] != null)
-  ? POLITI_PRISER[g.navn][v.navn] : v.pris;
-
-function antalDele(){
-  let n = 0;
-  SEKTIONER.forEach(s => s.grupper.forEach(g => {
-    if(g.dele && synlig(g)) g.varer.forEach(v => n += state.valgt[K(s, g, v)] || 0);
-  }));
-  return n;
-}
-function aktivRep(){
-  const opts = repOpts();
-  if(state.repMode === "ingen") return null;
-  if(state.repMode !== "auto") return opts.find(o => o.id === state.repMode) || null;
-  const n = antalDele();
-  if(n === 0) return null;
-  if(state.kunde === "politi" || state.type === "el") return opts[0];
-  const g = REP_GRAENSER.find(g => n <= g.op_til);
-  return opts.find(o => o.id === g.id) || null;
-}
-
-const p2 = n => String(n).padStart(2, "0");
-const nuStr = () => { const d = new Date(); return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()) + "T" + p2(d.getHours()) + ":" + p2(d.getMinutes()); };
-const fmtTid = s => { if(!s) return ""; const [d, t] = s.split("T"); const [y, m, da] = d.split("-"); return da + "-" + m + "-" + y + " " + t; };
-const fmtDato = d => p2(d.getDate()) + "-" + p2(d.getMonth() + 1) + "-" + d.getFullYear();
-const MAANEDER = ["januar","februar","marts","april","maj","juni","juli","august","september","oktober","november","december"];
-const LS_KEY = "autoexotic_politi_sager";
-let sagerMem = [];
-function hentSager(){ try { const x = localStorage.getItem(LS_KEY); if(x) sagerMem = JSON.parse(x); } catch(e){} return sagerMem; }
-function gemSager(l){ sagerMem = l; try { localStorage.setItem(LS_KEY, JSON.stringify(l)); } catch(e){} }
-
-function sagData(){
-  return { tid: $("sag-tid").value, station: $("sag-station").value.trim(), bil: $("sag-bil").value.trim(),
-    reg: $("sag-reg").value.trim(), afleveret: $("sag-afleveret").value.trim(),
-    arbejde: $("sag-arbejde").value.trim(), ladbil: $("sag-ladbil").checked };
-}
-function mangler(){
-  const d = sagData(), m = [];
-  if(!d.station) m.push("afsendende politistation");
-  if(!d.tid) m.push("dato og tidspunkt");
-  if(!d.bil) m.push("mærke og model");
-  if(!d.reg) m.push("registreringsnummer");
-  if(!d.afleveret) m.push("hvem der kom med bilen");
-  if(!d.arbejde) m.push("samlet arbejdstid");
-  if(!d.ladbil) m.push("levering via ladbil");
-  return m;
-}
-function nulstilSag(){
-  ["sag-station","sag-bil","sag-reg","sag-afleveret","sag-arbejde"].forEach(id => $(id).value = "");
-  $("sag-ladbil").checked = false;
-  $("sag-tid").value = nuStr();
-}
-function sagTekst(x){
-  let t = fmtTid(x.tid) + " – " + x.reg + " – " + x.bil + "\n" +
-    "  Afsendende station: " + x.station + " | Afleveret af: " + x.afleveret + " | Ladbil: Ja | Arbejdstid: " + x.arbejde + "\n";
-  if(x.rep) t += "  REP: " + x.rep + "\n";
-  if(x.linjer.length) t += "  Materialer: " + x.linjer.map(l => l.navn + (l.antal > 1 ? " x" + l.antal : "")).join(", ") + "\n";
-  t += "  Sum: " + kr(x.total) + "\n";
-  return t;
-}
-function valgtMaaned(){
-  const v = $("fak-maaned").value || nuStr().slice(0, 7);
-  const [y, m] = v.split("-").map(Number);
-  return { v, y, m };
-}
-function tegnFaktura(){
-  const { v, y, m } = valgtMaaned();
-  const sager = hentSager().filter(x => x.tid && x.tid.startsWith(v));
-  const sidste = new Date(y, m, 0);
-  const forfald = new Date(sidste.getTime()); forfald.setDate(forfald.getDate() + FAKTURA_FRIST_DAGE);
-  $("fak-info").textContent = "Faktura udstedes " + fmtDato(sidste) + " (sidste dag i måneden). Betalingsfrist " + FAKTURA_FRIST_DAGE + " dage, forfald " + fmtDato(forfald) + ".";
-  const ul = $("sager"); ul.innerHTML = sager.length ? "" : '<li class="tom">Ingen gemte sager i denne måned.</li>';
-  sager.forEach(x => {
-    const li = document.createElement("li");
-    li.innerHTML = "<span>" + x.reg + " – " + x.bil + "<small>" + fmtTid(x.tid) + " · " + x.station + "</small></span><span>" + kr(x.total) + "</span>";
-    const b = document.createElement("button");
-    b.textContent = "×"; b.title = "Slet sag"; b.setAttribute("aria-label", "Slet sag " + x.reg);
-    b.onclick = () => { if(confirm("Slet sagen " + x.reg + "?")){ gemSager(hentSager().filter(s => s.id !== x.id)); tegnFaktura(); } };
-    li.appendChild(b); ul.appendChild(li);
-  });
-  $("fak-antal").textContent = sager.length + (sager.length === 1 ? " sag" : " sager");
-  $("fak-total").textContent = kr(sager.reduce((a, x) => a + x.total, 0));
-}
-function fakturaTekst(){
-  const { v, y, m } = valgtMaaned();
-  const sager = hentSager().filter(x => x.tid && x.tid.startsWith(v));
-  const sidste = new Date(y, m, 0);
-  const forfald = new Date(sidste.getTime()); forfald.setDate(forfald.getDate() + FAKTURA_FRIST_DAGE);
-  let t = "FAKTURA – " + FIRMANAVN + " til Politiet\nMåned: " + MAANEDER[m - 1] + " " + y +
-    "\nFakturadato: " + fmtDato(sidste) + "\nBetalingsfrist: " + FAKTURA_FRIST_DAGE + " dage (forfald " + fmtDato(forfald) + ")\n\nSager:\n";
-  sager.forEach((x, i) => t += (i + 1) + ") " + sagTekst(x));
-  t += "\nAntal sager: " + sager.length + "\nTotal: " + kr(sager.reduce((a, x) => a + x.total, 0));
-  return t;
-}
-function tegnPolitiUI(){
-  const p = state.kunde === "politi";
-  $("sagpanel").hidden = !p; $("fakturapanel").hidden = !p; $("gem").hidden = !p;
-  if(p) tegnFaktura();
-}
-
-const LS_WEBHOOK = "autoexotic_webhook";
-const webhook = () => $("webhook").value.trim() || WEBHOOK_URL;
-function delTekst(t, max){
-  const dele = []; let cur = "";
-  t.split("\n").forEach(l => {
-    while(l.length > max){ if(cur){ dele.push(cur); cur = ""; } dele.push(l.slice(0, max)); l = l.slice(max); }
-    if((cur + "\n" + l).length > max){ dele.push(cur); cur = l; } else cur = cur ? cur + "\n" + l : l;
-  });
-  if(cur) dele.push(cur);
-  return dele;
-}
-async function sendDiscord(tekst, el){
-  const url = webhook();
-  if(!url){ el.textContent = "Indsæt dit Discord webhook-link under Discord-indstillinger først."; return; }
-  if(!/^https:\/\/(discord|discordapp)\.com\/api\/webhooks\//.test(url)){ el.textContent = "Linket ligner ikke et Discord webhook-link."; return; }
-  el.textContent = "Sender…";
-  try {
-    for(const del of delTekst(tekst, 1900)){
-      const r = await fetch(url, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: FIRMANAVN, content: "```\n" + del + "\n```", allowed_mentions: { parse: [] } })
-      });
-      if(!r.ok) throw new Error("fejl " + r.status);
-    }
-    el.textContent = "Sendt til Discord.";
-  } catch(e){
-    el.textContent = "Kunne ikke sende (" + e.message + "). Tjek webhook-linket og din internetforbindelse.";
-  }
-}
-
-function tegnKunder(){
-  $("kunder").innerHTML = "";
-  KUNDER.forEach(k => {
-    const b = document.createElement("button");
-    b.textContent = k.navn;
-    b.className = k.id === state.kunde ? "aktiv" : "";
-    b.onclick = () => {
-      state.kunde = k.id;
-      state.repMode = "auto";
-      state.tab = "rep";
-      if(k.id === "politi") Object.keys(state.valgt).forEach(x => { if(!x.startsWith("rep|")) delete state.valgt[x]; });
-      tegnAlt();
-    };
-    $("kunder").appendChild(b);
-  });
-}
-
-function tegnTyper(){
-  $("typer").innerHTML = "";
-  TYPER.forEach(t => {
-    const b = document.createElement("button");
-    b.textContent = t.navn;
-    b.className = t.id === state.type ? "aktiv" : "";
-    b.onclick = () => {
-      state.type = t.id;
-      // fjern valg fra grupper der ikke passer til biltypen
-      SEKTIONER.forEach(s => s.grupper.forEach(g => {
-        if(!synlig(g)) g.varer.forEach(v => delete state.valgt[K(s, g, v)]);
-      }));
-      if(state.repMode !== "auto" && state.repMode !== "ingen" && !(state.kunde === "politi" ? REP_POLITI : REP[t.id]).some(o => o.id === state.repMode)) state.repMode = "auto";
-      tegnAlt();
-    };
-    $("typer").appendChild(b);
-  });
-}
-
-function tegnRep(){
-  const box = $("rep"); box.innerHTML = "";
-  const mk = (id, html) => {
-    const b = document.createElement("button");
-    b.innerHTML = html;
-    b.className = state.repMode === id ? "aktiv" : "";
-    b.onclick = () => { state.repMode = id; tegnAlt(); };
-    box.appendChild(b);
-  };
-  mk("auto", "Auto");
-  repOpts().forEach(o => mk(o.id, o.navn + "<small>" + kr(o.pris) + "</small>"));
-  mk("ingen", "Ingen REP");
-  const r = aktivRep(), n = antalDele();
-  $("rephint").textContent = state.repMode === "auto"
-    ? (r ? "Auto: " + n + " dele valgt → " + r.navn + " (" + kr(r.pris) + ")." : "Auto: vælg dele, så vælges REP automatisk.")
-    : (r ? "Manuelt valgt: " + r.navn + "." : "Ingen REP på denne kvittering.");
-}
-
-function tegnTabs(){
-  const box = $("tabs"); box.innerHTML = "";
-  sektioner().forEach(s => {
-    let c = 0;
-    s.grupper.forEach(g => synlig(g) && g.varer.forEach(v => { if(state.valgt[K(s, g, v)]) c++; }));
-    const b = document.createElement("button");
-    b.className = s.id === state.tab ? "aktiv" : "";
-    b.innerHTML = s.navn + (c ? "<b>" + c + "</b>" : "");
-    b.onclick = () => { state.tab = s.id; $("soeg").value = ""; tegnVarer(); tegnTabs(); };
-    box.appendChild(b);
-  });
-}
-
-function tegnVarer(){
-  const q = $("soeg").value.trim().toLowerCase();
-  const root = $("kategorier"); root.innerHTML = "";
-  sektioner().forEach(s => {
-    if(!q && s.id !== state.tab) return;
-    let heading = false;
-    s.grupper.forEach(g => {
-      if(!synlig(g)) return;
-      const varer = g.varer.filter(v => !q || v.navn.toLowerCase().includes(q) || g.navn.toLowerCase().includes(q) || s.navn.toLowerCase().includes(q));
-      if(!varer.length) return;
-      if(q && !heading){ const h = document.createElement("h3"); h.className = "sek"; h.textContent = s.navn; root.appendChild(h); heading = true; }
-
-      const sec = document.createElement("section");
-      sec.className = "panel kat";
-      const h = document.createElement("h2");
-      h.innerHTML = "<span>" + g.navn + "</span>";
-      if(!g.eksklusiv){
-        const alle = document.createElement("button");
-        alle.textContent = "Vælg alle";
-        alle.onclick = () => {
-          const alleValgt = varer.every(v => state.valgt[K(s, g, v)]);
-          varer.forEach(v => { if(alleValgt) delete state.valgt[K(s, g, v)]; else state.valgt[K(s, g, v)] ||= 1; });
-          tegnAlt();
-        };
-        h.appendChild(alle);
-      }
-      sec.appendChild(h);
-
-      varer.forEach(v => {
-        const k = K(s, g, v), antal = state.valgt[k] || 0;
-        const row = document.createElement("div");
-        row.className = "vare" + (antal ? " valgt" : "") + (g.eksklusiv ? " enkelt" : "");
-        row.innerHTML =
-          '<input type="' + (g.eksklusiv ? "radio" : "checkbox") + '" ' + (antal ? "checked" : "") + ' tabindex="-1">' +
-          '<span>' + v.navn + (v.ulovlig ? '<span class="ulovlig">Ulovlig</span>' : "") + '</span>' +
-          '<div class="antal"><button type="button" data-d="-1" aria-label="Færre">−</button><span>' + (antal || 1) +
-          '</span><button type="button" data-d="1" aria-label="Flere">+</button></div>' +
-          '<span class="pris">' + kr(prisFor(g, v)) + '</span>';
-        row.tabIndex = 0;
-        const toggle = () => {
-          if(antal) delete state.valgt[k];
-          else {
-            if(g.eksklusiv) g.varer.forEach(x => delete state.valgt[K(s, g, x)]);
-            state.valgt[k] = 1;
-          }
-          tegnAlt();
-        };
-        row.onclick = e => { if(!e.target.closest(".antal")) toggle(); };
-        row.onkeydown = e => { if(e.key === " " || e.key === "Enter"){ e.preventDefault(); toggle(); } };
-        row.querySelectorAll(".antal button").forEach(b => b.onclick = e => {
-          e.stopPropagation();
-          const n = (state.valgt[k] || 1) + Number(b.dataset.d);
-          if(n < 1) delete state.valgt[k]; else state.valgt[k] = n;
-          tegnAlt();
-        });
-        sec.appendChild(row);
-      });
-      root.appendChild(sec);
-    });
-  });
-  if(!root.children.length) root.innerHTML = '<p class="tom">Ingen varer matcher din søgning.</p>';
-}
-
-function regn(){
-  const r = { dele: [], cos: [], upg: [], sumDele: 0, sumCos: 0, sumUpg: 0, rep: aktivRep(), antalDele: antalDele() };
-  SEKTIONER.forEach(s => s.grupper.forEach(g => {
-    if(!synlig(g)) return;
-    g.varer.forEach(v => {
-      const n = state.valgt[K(s, g, v)];
-      if(!n) return;
-      const navn = s.id === "upg" ? g.navn + " " + v.navn : v.navn;
-      const l = { navn, antal: n, sum: prisFor(g, v) * n };
-      if(s.id === "rep"){ r.dele.push(l); r.sumDele += l.sum; }
-      else if(s.id === "cos"){ r.cos.push(l); r.sumCos += l.sum; }
-      else { r.upg.push(l); r.sumUpg += l.sum; }
-    });
-  }));
-  r.sumRep = r.rep ? r.rep.pris : 0;
-  r.sub = r.sumDele + r.sumRep + r.sumCos + r.sumUpg;
-  r.pct = Math.min(100, Math.max(0, Number($("rabat").value) || 0));
-  r.rabat = r.sub * r.pct / 100;
-  r.total = r.sub - r.rabat;
-  return r;
-}
-function alleLinjer(r){
-  const out = [];
-  if(r.rep) out.push({ navn: r.rep.navn, antal: 1, sum: r.rep.pris });
-  return out.concat(r.dele, r.cos, r.upg);
-}
-
-function tegnSum(){
-  const r = regn(), ul = $("linjer"), ls = alleLinjer(r);
-  ul.innerHTML = ls.length ? "" : '<li class="tom">Ingen ydelser valgt endnu.</li>';
-  ls.forEach(x => {
-    const li = document.createElement("li");
-    li.innerHTML = "<span>" + x.navn + (x.antal > 1 ? " <em>× " + x.antal + "</em>" : "") + "</span><span>" + kr(x.sum) + "</span>";
-    ul.appendChild(li);
-  });
-  $("antaldele").textContent = r.antalDele;
-  $("s-dele").textContent = kr(r.sumDele);
-  $("s-rep").textContent = kr(r.sumRep);
-  $("s-cos").textContent = kr(r.sumCos);
-  $("s-upg").textContent = kr(r.sumUpg);
-  $("s-rabat").textContent = r.pct ? "−" + kr(r.rabat) + " (" + r.pct + "%)" : kr(0);
-  $("total").textContent = kr(r.total);
-}
-
-function tegnAlt(){ tegnPolitiUI(); tegnKunder(); tegnTyper(); tegnRep(); tegnTabs(); tegnVarer(); tegnSum(); }
-
-function kvittering(){
-  const r = regn();
-  const bil = TYPER.find(t => t.id === state.type).navn;
-  const kunde = $("kunde").value.trim();
-  const blok = (titel, liste) => liste.length ? "\n" + titel + ":\n" + liste.map(x => "  " + x.navn + (x.antal > 1 ? " x" + x.antal : "") + ": " + kr(x.sum)).join("\n") + "\n" : "";
-  let t = FIRMANAVN + " – Kvittering\n";
-  if(kunde) t += "Kunde: " + kunde + "\n";
-  if(state.kunde === "politi"){
-    const d = sagData();
-    t += "Kunde: Politiet\nModtaget: " + fmtTid(d.tid) + "\nAfsendende station: " + d.station +
-      "\nBil: " + d.bil + " (" + d.reg + ")\nAfleveret af: " + d.afleveret +
-      "\nLeveret via ladbil: " + (d.ladbil ? "Ja" : "Nej") + "\nSamlet arbejdstid: " + d.arbejde + "\n";
-  } else t += "Bil: " + bil + "\n";
-  if(r.rep) t += "\nREP: " + r.rep.navn + ": " + kr(r.rep.pris) + "\n";
-  t += blok((state.kunde === "politi" ? "Materialer" : "Dele") + " (" + r.antalDele + ")", r.dele) + blok("Cosmetics", r.cos) + blok("Upgrades", r.upg);
-  if(r.pct) t += "\nRabat " + r.pct + "%: -" + kr(r.rabat);
-  t += "\nTotal: " + kr(r.total);
-  return t;
-}
-
-$("kopier").onclick = async () => {
-  if(!alleLinjer(regn()).length){ $("besked").textContent = "Vælg mindst én ydelse først."; return; }
-  if(state.kunde === "politi"){
-    const m = mangler();
-    if(m.length){ $("besked").textContent = "Udfyld først: " + m.join(", ") + "."; return; }
-  }
-  const t = kvittering();
-  try { await navigator.clipboard.writeText(t); }
-  catch(e){
-    const ta = document.createElement("textarea");
-    ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
-  }
-  $("besked").textContent = "Kvittering kopieret.";
-};
-$("gem").onclick = () => {
-  const r = regn();
-  if(!alleLinjer(r).length){ $("besked").textContent = "Vælg mindst én ydelse først."; return; }
-  const m = mangler();
-  if(m.length){ $("besked").textContent = "Udfyld først: " + m.join(", ") + "."; return; }
-  const sager = hentSager().slice();
-  sager.push(Object.assign(sagData(), {
-    id: Date.now(), total: r.total, rep: r.rep ? r.rep.navn : "",
-    linjer: r.dele.map(l => ({ navn: l.navn, antal: l.antal }))
-  }));
-  gemSager(sager);
-  const maaned = sagData().tid.slice(0, 7);
-  state.valgt = {}; state.repMode = "auto"; $("kunde").value = ""; $("rabat").value = 0;
-  nulstilSag();
-  $("fak-maaned").value = maaned;
-  tegnAlt();
-  $("besked").textContent = "Sag gemt på månedsfakturaen.";
-};
-$("send").onclick = () => {
-  if(!alleLinjer(regn()).length){ $("besked").textContent = "Vælg mindst én ydelse først."; return; }
-  if(state.kunde === "politi"){
-    const m = mangler();
-    if(m.length){ $("besked").textContent = "Udfyld først: " + m.join(", ") + "."; return; }
-  }
-  sendDiscord(kvittering(), $("besked"));
-};
-$("fak-send").onclick = () => {
-  const { v } = valgtMaaned();
-  if(!hentSager().some(x => x.tid && x.tid.startsWith(v))){ $("fak-besked").textContent = "Ingen sager at fakturere i denne måned."; return; }
-  sendDiscord(fakturaTekst(), $("fak-besked"));
-};
-$("webhook").onchange = () => { try { localStorage.setItem(LS_WEBHOOK, $("webhook").value.trim()); } catch(e){} };
-try { $("webhook").value = localStorage.getItem(LS_WEBHOOK) || ""; } catch(e){}
-$("fak-maaned").onchange = tegnFaktura;
-$("fak-kopier").onclick = async () => {
-  const { v } = valgtMaaned();
-  if(!hentSager().some(x => x.tid && x.tid.startsWith(v))){ $("fak-besked").textContent = "Ingen sager at fakturere i denne måned."; return; }
-  const t = fakturaTekst();
-  try { await navigator.clipboard.writeText(t); }
-  catch(e){ const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
-  $("fak-besked").textContent = "Månedsfaktura kopieret.";
-};
-$("nulstil").onclick = () => {
-  state.valgt = {}; state.repMode = "auto"; nulstilSag();
-  $("kunde").value = ""; $("rabat").value = 0; $("soeg").value = ""; $("besked").textContent = "";
-  tegnAlt();
-};
-$("soeg").oninput = tegnVarer;
-$("rabat").oninput = tegnSum;
-
-document.title = "Prisliste – " + FIRMANAVN;
-$("sag-tid").value = nuStr();
-$("fak-maaned").value = nuStr().slice(0, 7);
-$("firmanavn").textContent = FIRMANAVN;
-tegnAlt();
+const FIRMANAVN="Auto Exotic",VALUTA="kr";
+const TYPER=[{id:"fuel",navn:"Brændstofsbil"},{id:"el",navn:"Elbil"}];
+const REP={fuel:[{id:"mindre",navn:"Mindre REP",pris:1250},{id:"mellem",navn:"Mellem REP",pris:2500},{id:"stor",navn:"Stor REP",pris:5000}],el:[{id:"el",navn:"EL REP",pris:5000}]};
+const REP_GRAENSER=[{op_til:2,id:"mindre"},{op_til:4,id:"mellem"},{op_til:Infinity,id:"stor"}];
+const KUNDER=[{id:"civil",navn:"Civil"},{id:"politi",navn:"Politi"}],WEBHOOK_URL="",FAKTURA_FRIST_DAGE=15;
+const REP_POLITI=[{id:"politi",navn:"Politi REP",pris:3000}];
+const POLITI_PRISER={"Brændstof dele":{"Alternator":1650,"Brakes":220,"Fuel Injector":2100,"Power Steering Pump":2500,"Radiator":1450,"Transmission":4550},"Kerne dele EV":{"EV Battery":4950,"Electric Motor":3300,"Brakes":220},"Service dele":{"Air Filter":400,"Brake Pads":950,"Drive Belt":550,"Fuel Filter":700,"High Voltage Wiring":1150,"Oil Filter":550,"Spark Plugs":970,"Tire":440},"Væsker":{"Battery Coolant":200,"Brake Fluid":200,"Coolant":200,"Steering Fluid":200,"Transmission Fluid":200},"Bil dele":{"Vehicle Door":550,"Vehicle Hood":1370,"Vehicle Trunk":1100,"Vehicle Wheel":500,"Vehicle Window":300}};
+const SEKTIONER=[
+{id:"rep",navn:"Dele",grupper:[
+{navn:"Brændstof dele",kun:"fuel",dele:true,varer:[{navn:"Alternator",pris:1650},{navn:"Brakes",pris:220},{navn:"Fuel Injector",pris:2100},{navn:"Power Steering Pump",pris:2500},{navn:"Radiator",pris:1400},{navn:"Transmission",pris:4400}]},
+{navn:"Kerne dele EV",kun:"el",dele:true,varer:[{navn:"EV Battery",pris:4950},{navn:"Electric Motor",pris:3300},{navn:"Brakes",pris:220}]},
+{navn:"Service dele",dele:true,varer:[{navn:"Air Filter",pris:450},{navn:"Brake Pads",pris:1050},{navn:"Drive Belt",pris:600},{navn:"Fuel Filter",pris:750},{navn:"High Voltage Wiring",pris:1250},{navn:"Oil Filter",pris:550},{navn:"Spark Plugs",pris:1050},{navn:"Tire",pris:500}]},
+{navn:"Væsker",dele:true,varer:[{navn:"Battery Coolant",pris:210},{navn:"Brake Fluid",pris:210},{navn:"Coolant",pris:120},{navn:"Steering Fluid",pris:250},{navn:"Transmission Fluid",pris:200}]},
+{navn:"Bil dele",dele:true,varer:[{navn:"Vehicle Door",pris:600},{navn:"Vehicle Hood",pris:1500},{navn:"Vehicle Trunk",pris:1200},{navn:"Vehicle Wheel",pris:250},{navn:"Vehicle Window",pris:300}]}]},
+{id:"cos",navn:"Cosmetics",grupper:[{navn:"Random",varer:[{navn:"Horns",pris:200},{navn:"Window tint",pris:600},{navn:"Wings",pris:1000},{navn:"Nummerplade",pris:400}]},{navn:"Head lights",varer:[{navn:"Xenon",pris:500},{navn:"Color",pris:500},{navn:"Neon",pris:600}]},{navn:"Respray",varer:[{navn:"Perlecent",pris:300},{navn:"Fave 1",pris:200},{navn:"Fave 2",pris:200},{navn:"StickerKit",pris:18750}]},{navn:"Body Parts",varer:[{navn:"Cage",pris:600},{navn:"Front bumper",pris:1700},{navn:"Grill",pris:750},{navn:"Hood",pris:750},{navn:"Left Fender",pris:1000},{navn:"Rear bumper",pris:750},{navn:"Right Fender",pris:1000},{navn:"Roof",pris:1400},{navn:"Side skirt",pris:1400},{navn:"Spoiler",pris:1650},{navn:"Udstødning",pris:500}]},{navn:"Motorrum",varer:[{navn:"Luft Filter",pris:800},{navn:"Motorblok",pris:2000},{navn:"Struts",pris:1700},{navn:"Aerials",pris:200}]},{navn:"Interior",varer:[{navn:"Dashboard",pris:750},{navn:"Door Speakers",pris:600},{navn:"Interior Trim",pris:900},{navn:"Seats",pris:750},{navn:"Wheel",pris:600}]},{navn:"Dæk",varer:[{navn:"Custom dæk",pris:300},{navn:"Røg",pris:700},{navn:"Fave",pris:450},{navn:"Hjul type",pris:450}]}]},
+{id:"upg",navn:"Upgrades",grupper:[{navn:"Armor",eksklusiv:true,varer:[{navn:"Level 1",pris:35000},{navn:"Level 2",pris:50000},{navn:"Level 3",pris:65000},{navn:"Level 4",pris:80000},{navn:"Level 5",pris:95000}]},{navn:"Engine",eksklusiv:true,varer:[{navn:"Level 1",pris:65000},{navn:"Level 2",pris:95000},{navn:"Level 3",pris:130000,ulovlig:true},{navn:"Level 4",pris:160000,ulovlig:true}]},{navn:"Suspension",eksklusiv:true,varer:[{navn:"Level 1",pris:10500},{navn:"Level 2",pris:15000},{navn:"Level 3",pris:22500,ulovlig:true},{navn:"Level 4",pris:30000,ulovlig:true}]},{navn:"Transmission",eksklusiv:true,varer:[{navn:"Level 1",pris:35000},{navn:"Level 2",pris:55000},{navn:"Level 3",pris:70000,ulovlig:true}]},{navn:"Brakes",eksklusiv:true,varer:[{navn:"Level 1",pris:35000},{navn:"Level 2",pris:50000},{navn:"Level 3",pris:70000,ulovlig:true}]},{navn:"Turbo",eksklusiv:true,varer:[{navn:"Lovlig",pris:50000},{navn:"Ulovlig",pris:55000,ulovlig:true}]}]}];
+const state={kunde:"civil",type:TYPER[0].id,repMode:"auto",tab:SEKTIONER[0].id,valgt:{},historikTab:"civil"};
+const $=id=>document.getElementById(id),K=(s,g,v)=>s.id+"|"+g.navn+"|"+v.navn,kr=n=>VALUTA+" "+Math.round(n).toLocaleString("da-DK"),synlig=g=>!g.kun||g.kun===state.type,repOpts=()=>state.kunde==="politi"?REP_POLITI:REP[state.type],sektioner=()=>state.kunde==="politi"?SEKTIONER.filter(s=>s.id==="rep"):SEKTIONER,prisFor=(g,v)=>(state.kunde==="politi"&&POLITI_PRISER[g.navn]&&POLITI_PRISER[g.navn][v.navn]!=null)?POLITI_PRISER[g.navn][v.navn]:v.pris;
+function antalDele(){let n=0;SEKTIONER.forEach(s=>s.grupper.forEach(g=>{if(g.dele&&synlig(g))g.varer.forEach(v=>n+=state.valgt[K(s,g,v)]||0)}));return n}
+function aktivRep(){const opts=repOpts();if(state.repMode==="ingen")return null;if(state.repMode!=="auto")return opts.find(o=>o.id===state.repMode)||null;const n=antalDele();if(!n)return null;if(state.kunde==="politi"||state.type==="el")return opts[0];const g=REP_GRAENSER.find(g=>n<=g.op_til);return opts.find(o=>o.id===g.id)||null}
+const p2=n=>String(n).padStart(2,"0"),nuStr=()=>{const d=new Date();return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate())+"T"+p2(d.getHours())+":"+p2(d.getMinutes())},fmtTid=s=>{if(!s)return"";const[d,t]=s.split("T"),[y,m,da]=d.split("-");return da+"-"+m+"-"+y+" "+t},fmtDato=d=>p2(d.getDate())+"-"+p2(d.getMonth()+1)+"-"+d.getFullYear(),MAANEDER=["januar","februar","marts","april","maj","juni","juli","august","september","oktober","november","december"],LS_KEY="autoexotic_politi_sager",LS_CIVIL="autoexotic_civil_kvitteringer";
+let sagerMem=[];function hentSager(){try{const x=localStorage.getItem(LS_KEY);if(x)sagerMem=JSON.parse(x)}catch(e){}return sagerMem}function gemSager(l){sagerMem=l;try{localStorage.setItem(LS_KEY,JSON.stringify(l))}catch(e){}}
+function hentCivil(){try{return JSON.parse(localStorage.getItem(LS_CIVIL)||"[]")}catch(e){return []}}function gemCivil(l){try{localStorage.setItem(LS_CIVIL,JSON.stringify(l))}catch(e){}}
+function sagData(){return{tid:$("sag-tid").value,station:$("sag-station").value.trim(),bil:$("sag-bil").value.trim(),reg:$("sag-reg").value.trim(),afleveret:$("sag-afleveret").value.trim(),arbejde:$("sag-arbejde").value.trim(),ladbil:$("sag-ladbil").checked}}
+function mangler(){const d=sagData(),m=[];if(!d.station)m.push("afsendende politistation");if(!d.tid)m.push("dato og tidspunkt");if(!d.bil)m.push("mærke og model");if(!d.reg)m.push("registreringsnummer");if(!d.afleveret)m.push("hvem der kom med bilen");if(!d.arbejde)m.push("samlet arbejdstid");if(!d.ladbil)m.push("levering via ladbil");return m}
+function nulstilSag(){["sag-station","sag-bil","sag-reg","sag-afleveret","sag-arbejde"].forEach(id=>$(id).value="");$("sag-ladbil").checked=false;$("sag-tid").value=nuStr()}
+function sagTekst(x){let t=fmtTid(x.tid)+" – "+x.reg+" – "+x.bil+"\n  Afsendende station: "+x.station+" | Afleveret af: "+x.afleveret+" | Ladbil: Ja | Arbejdstid: "+x.arbejde+"\n";if(x.rep)t+="  REP: "+x.rep+"\n";if(x.linjer.length)t+="  Materialer: "+x.linjer.map(l=>l.navn+(l.antal>1?" x"+l.antal:"")).join(", ")+"\n";return t+"  Sum: "+kr(x.total)+"\n"}
+function valgtMaaned(){const v=$("fak-maaned").value||nuStr().slice(0,7),[y,m]=v.split("-").map(Number);return{v,y,m}}
+function tegnHistorikTabs(){const civil=state.historikTab==="civil";$("tab-faktura").classList.toggle("aktiv",!civil);$("tab-civile").classList.toggle("aktiv",civil);$("fakturapanel").hidden=state.kunde!=="politi"||civil;$("civilpanel").hidden=!civil;if(!civil&&state.kunde==="politi")tegnFaktura();if(civil)tegnCivilHistorik()}
+function tegnFaktura(){const{v,y,m}=valgtMaaned(),sager=hentSager().filter(x=>x.tid&&x.tid.startsWith(v)),sidste=new Date(y,m,0),forfald=new Date(sidste.getTime());forfald.setDate(forfald.getDate()+FAKTURA_FRIST_DAGE);$("fak-info").textContent="Faktura udstedes "+fmtDato(sidste)+" (sidste dag i måneden). Betalingsfrist "+FAKTURA_FRIST_DAGE+" dage, forfald "+fmtDato(forfald)+".";const ul=$("sager");ul.innerHTML="";if(!sager.length){ul.innerHTML='<li class="tom">Ingen gemte sager i denne måned.</li>'}sager.forEach(x=>{const li=document.createElement("li"),title=document.createElement("span");title.append(document.createTextNode((x.reg||"")+" – "+(x.bil||"")));const sm=document.createElement("small");sm.textContent=fmtTid(x.tid)+" · "+(x.station||"");title.appendChild(sm);const total=document.createElement("span");total.textContent=kr(x.total);const del=document.createElement("button");del.className="sag-slet";del.textContent="×";del.title="Slet sag";del.setAttribute("aria-label","Slet sag "+(x.reg||""));del.onclick=()=>{if(confirm("Slet sagen "+x.reg+"?")){gemSager(hentSager().filter(s=>s.id!==x.id));tegnFaktura()}};const details=document.createElement("details");details.className="sag-detaljer";const summary=document.createElement("summary");summary.textContent="Vis hvad der er lavet";details.appendChild(summary);const info=document.createElement("div");info.textContent="Afsendende station: "+(x.station||"Ikke angivet")+" · Afleveret af: "+(x.afleveret||"Ikke angivet")+" · Leveret via ladbil: "+(x.ladbil?"Ja":"Nej")+" · Arbejdstid: "+(x.arbejde||"Ikke angivet");details.appendChild(info);const list=document.createElement("ul");if(x.rep){const r=document.createElement("li");r.textContent="REP: "+x.rep;list.appendChild(r)}(Array.isArray(x.linjer)?x.linjer:[]).forEach(l=>{const it=document.createElement("li");it.textContent=l.navn+(l.antal>1?" × "+l.antal:"");list.appendChild(it)});if(!list.children.length){const empty=document.createElement("li");empty.textContent="Ingen materialer registreret.";list.appendChild(empty)}details.appendChild(list);li.append(title,total,del,details);ul.appendChild(li)});$("fak-antal").textContent=sager.length+(sager.length===1?" sag":" sager");$("fak-total").textContent=kr(sager.reduce((a,x)=>a+x.total,0))}
+function tegnCivilHistorik(){const ul=$("civil-sager"),sager=hentCivil().sort((a,b)=>b.id-a.id).slice(0,30);ul.innerHTML="";if(!sager.length){ul.innerHTML='<li class="tom">Der er endnu ikke gemt nogen civile kvitteringer.</li>';return}sager.forEach(x=>{const li=document.createElement("li"),main=document.createElement("span");main.textContent=(x.kunde||"Civil")+" – "+(x.bil||"Bil ikke angivet");const small=document.createElement("small");small.textContent=fmtTid(x.tid)+" · Total: "+kr(x.total);main.appendChild(small);const del=document.createElement("button");del.textContent="×";del.title="Slet kvittering";del.setAttribute("aria-label","Slet kvittering fra "+fmtTid(x.tid));del.onclick=()=>{if(confirm("Slet denne civile kvittering?")){gemCivil(hentCivil().filter(r=>r.id!==x.id));tegnCivilHistorik()}};const details=document.createElement("details");details.className="civil-detaljer";const summary=document.createElement("summary");summary.textContent="Vis reparationen";details.appendChild(summary);const list=document.createElement("ul");(Array.isArray(x.linjer)?x.linjer:[]).forEach(l=>{const it=document.createElement("li");it.textContent=l.navn+(l.antal>1?" × "+l.antal:"")+": "+kr(l.sum);list.appendChild(it)});if(x.rabat){const disc=document.createElement("li");disc.textContent="Rabat "+x.rabat+"%";list.appendChild(disc)}details.appendChild(list);li.append(main,del,details);ul.appendChild(li)})}
+function fakturaTekst(){const{v,y,m}=valgtMaaned(),sager=hentSager().filter(x=>x.tid&&x.tid.startsWith(v)),sidste=new Date(y,m,0),forfald=new Date(sidste.getTime());forfald.setDate(forfald.getDate()+FAKTURA_FRIST_DAGE);let t="FAKTURA – "+FIRMANAVN+" til Politiet\nMåned: "+MAANEDER[m-1]+" "+y+"\nFakturadato: "+fmtDato(sidste)+"\nBetalingsfrist: "+FAKTURA_FRIST_DAGE+" dage (forfald "+fmtDato(forfald)+")\n\nSager:\n";sager.forEach((x,i)=>t+=(i+1)+") "+sagTekst(x));return t+"\nAntal sager: "+sager.length+"\nTotal: "+kr(sager.reduce((a,x)=>a+x.total,0))}
+function tegnPolitiUI(){const p=state.kunde==="politi";$("sagpanel").hidden=!p;$("gem").hidden=!p;$("gem-civil").hidden=p;$("tab-faktura").hidden=!p;tegnHistorikTabs()}
+const LS_WEBHOOK="autoexotic_webhook",webhook=()=>$("webhook").value.trim()||WEBHOOK_URL;
+function delTekst(t,max){const parts=[];let cur="";t.split("\n").forEach(l=>{while(l.length>max){if(cur){parts.push(cur);cur=""}parts.push(l.slice(0,max));l=l.slice(max)}if((cur+"\n"+l).length>max){parts.push(cur);cur=l}else cur=cur?cur+"\n"+l:l});if(cur)parts.push(cur);return parts}
+async function sendDiscord(tekst,el){const url=webhook();if(!url){el.textContent="Indsæt dit Discord webhook-link under Discord-indstillinger først.";return}if(!/^https:\/\/(discord|discordapp)\.com\/api\/webhooks\//.test(url)){el.textContent="Linket ligner ikke et Discord webhook-link.";return}el.textContent="Sender…";try{for(const del of delTekst(tekst,1900)){const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:FIRMANAVN,content:"```\n"+del+"\n```",allowed_mentions:{parse:[]}})});if(!r.ok)throw new Error("fejl "+r.status)}el.textContent="Sendt til Discord."}catch(e){el.textContent="Kunne ikke sende ("+e.message+"). Tjek webhook-linket og din internetforbindelse."}}
+function tegnKunder(){$("kunder").innerHTML="";KUNDER.forEach(k=>{const b=document.createElement("button");b.textContent=k.navn;b.className=k.id===state.kunde?"aktiv":"";b.onclick=()=>{state.kunde=k.id;state.repMode="auto";state.tab="rep";state.historikTab=k.id==="politi"?"faktura":"civil";if(k.id==="politi")Object.keys(state.valgt).forEach(x=>{if(!x.startsWith("rep|"))delete state.valgt[x]});tegnAlt()};$("kunder").appendChild(b)})}
+function tegnTyper(){$("typer").innerHTML="";TYPER.forEach(t=>{const b=document.createElement("button");b.textContent=t.navn;b.className=t.id===state.type?"aktiv":"";b.onclick=()=>{state.type=t.id;SEKTIONER.forEach(s=>s.grupper.forEach(g=>{if(!synlig(g))g.varer.forEach(v=>delete state.valgt[K(s,g,v)])}));if(state.repMode!=="auto"&&state.repMode!=="ingen"&&!(state.kunde==="politi"?REP_POLITI:REP[t.id]).some(o=>o.id===state.repMode))state.repMode="auto";tegnAlt()};$("typer").appendChild(b)})}
+function tegnRep(){const box=$("rep");box.innerHTML="";const mk=(id,html)=>{const b=document.createElement("button");b.innerHTML=html;b.className=state.repMode===id?"aktiv":"";b.onclick=()=>{state.repMode=id;tegnAlt()};box.appendChild(b)};mk("auto","Auto");repOpts().forEach(o=>mk(o.id,o.navn+"<small>"+kr(o.pris)+"</small>"));mk("ingen","Ingen REP");const r=aktivRep(),n=antalDele();$("rephint").textContent=state.repMode==="auto"?(r?"Auto: "+n+" dele valgt → "+r.navn+" ("+kr(r.pris)+").":"Auto: vælg dele, så vælges REP automatisk."):(r?"Manuelt valgt: "+r.navn+".":"Ingen REP på denne kvittering.")}
+function tegnTabs(){const box=$("tabs");box.innerHTML="";sektioner().forEach(s=>{let c=0;s.grupper.forEach(g=>synlig(g)&&g.varer.forEach(v=>{if(state.valgt[K(s,g,v)])c++}));const b=document.createElement("button");b.className=s.id===state.tab?"aktiv":"";b.innerHTML=s.navn+(c?"<b>"+c+"</b>":"");b.onclick=()=>{state.tab=s.id;$("soeg").value="";tegnVarer();tegnTabs()};box.appendChild(b)})}
+function tegnVarer(){const q=$("soeg").value.trim().toLowerCase(),root=$("kategorier");root.innerHTML="";sektioner().forEach(s=>{if(!q&&s.id!==state.tab)return;let heading=false;s.grupper.forEach(g=>{if(!synlig(g))return;const varer=g.varer.filter(v=>!q||v.navn.toLowerCase().includes(q)||g.navn.toLowerCase().includes(q)||s.navn.toLowerCase().includes(q));if(!varer.length)return;if(q&&!heading){const h=document.createElement("h3");h.className="sek";h.textContent=s.navn;root.appendChild(h);heading=true}const sec=document.createElement("section");sec.className="panel kat";const h=document.createElement("h2");h.innerHTML="<span>"+g.navn+"</span>";if(!g.eksklusiv){const all=document.createElement("button");all.textContent="Vælg alle";all.onclick=()=>{const selected=varer.every(v=>state.valgt[K(s,g,v)]);varer.forEach(v=>{if(selected)delete state.valgt[K(s,g,v)];else state.valgt[K(s,g,v)]||=1});tegnAlt()};h.appendChild(all)}sec.appendChild(h);varer.forEach(v=>{const k=K(s,g,v),antal=state.valgt[k]||0,row=document.createElement("div");row.className="vare"+(antal?" valgt":"")+(g.eksklusiv?" enkelt":"");row.innerHTML='<input type="'+(g.eksklusiv?"radio":"checkbox")+'" '+(antal?"checked":"")+' tabindex="-1"><span>'+v.navn+(v.ulovlig?'<span class="ulovlig">Ulovlig</span>':"")+"</span><div class=\"antal\"><button type=\"button\" data-d=\"-1\" aria-label=\"Færre\">−</button><span>"+(antal||1)+"</span><button type=\"button\" data-d=\"1\" aria-label=\"Flere\">+</button></div><span class=\"pris\">"+kr(prisFor(g,v))+"</span>";row.tabIndex=0;const toggle=()=>{if(antal)delete state.valgt[k];else{if(g.eksklusiv)g.varer.forEach(x=>delete state.valgt[K(s,g,x)]);state.valgt[k]=1}tegnAlt()};row.onclick=e=>{if(!e.target.closest(".antal"))toggle()};row.onkeydown=e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();toggle()}};row.querySelectorAll(".antal button").forEach(b=>b.onclick=e=>{e.stopPropagation();const n=(state.valgt[k]||1)+Number(b.dataset.d);if(n<1)delete state.valgt[k];else state.valgt[k]=n;tegnAlt()});sec.appendChild(row)});root.appendChild(sec)})});if(!root.children.length)root.innerHTML='<p class="tom">Ingen varer matcher din søgning.</p>'}
+function regn(){const r={dele:[],cos:[],upg:[],sumDele:0,sumCos:0,sumUpg:0,rep:aktivRep(),antalDele:antalDele()};SEKTIONER.forEach(s=>s.grupper.forEach(g=>{if(!synlig(g))return;g.varer.forEach(v=>{const n=state.valgt[K(s,g,v)];if(!n)return;const navn=s.id==="upg"?g.navn+" "+v.navn:v.navn,l={navn,antal:n,sum:prisFor(g,v)*n};if(s.id==="rep"){r.dele.push(l);r.sumDele+=l.sum}else if(s.id==="cos"){r.cos.push(l);r.sumCos+=l.sum}else{r.upg.push(l);r.sumUpg+=l.sum}})}));r.sumRep=r.rep?r.rep.pris:0;r.sub=r.sumDele+r.sumRep+r.sumCos+r.sumUpg;r.pct=Math.min(100,Math.max(0,Number($("rabat").value)||0));r.rabat=r.sub*r.pct/100;r.total=r.sub-r.rabat;return r}
+function alleLinjer(r){const out=[];if(r.rep)out.push({navn:r.rep.navn,antal:1,sum:r.rep.pris});return out.concat(r.dele,r.cos,r.upg)}
+function tegnSum(){const r=regn(),ul=$("linjer"),ls=alleLinjer(r);ul.innerHTML=ls.length?"":'<li class="tom">Ingen ydelser valgt endnu.</li>';ls.forEach(x=>{const li=document.createElement("li");li.innerHTML="<span>"+x.navn+(x.antal>1?" <em>× "+x.antal+"</em>":"")+"</span><span>"+kr(x.sum)+"</span>";ul.appendChild(li)});$("antaldele").textContent=r.antalDele;$("s-dele").textContent=kr(r.sumDele);$("s-rep").textContent=kr(r.sumRep);$("s-cos").textContent=kr(r.sumCos);$("s-upg").textContent=kr(r.sumUpg);$("s-rabat").textContent=r.pct?"−"+kr(r.rabat)+" ("+r.pct+"%)":kr(0);$("total").textContent=kr(r.total)}
+function tegnAlt(){tegnPolitiUI();tegnKunder();tegnTyper();tegnRep();tegnTabs();tegnVarer();tegnSum()}
+function kvittering(){const r=regn(),bil=TYPER.find(t=>t.id===state.type).navn,kunde=$("kunde").value.trim(),blok=(titel,liste)=>liste.length?"\n"+titel+":\n"+liste.map(x=>"  "+x.navn+(x.antal>1?" x"+x.antal:"")+": "+kr(x.sum)).join("\n")+"\n":"";let t=FIRMANAVN+" – Kvittering\n";if(kunde)t+="Kunde: "+kunde+"\n";if(state.kunde==="politi"){const d=sagData();t+="Kunde: Politiet\nModtaget: "+fmtTid(d.tid)+"\nAfsendende station: "+d.station+"\nBil: "+d.bil+" ("+d.reg+")\nAfleveret af: "+d.afleveret+"\nLeveret via ladbil: "+(d.ladbil?"Ja":"Nej")+"\nSamlet arbejdstid: "+d.arbejde+"\n"}else t+="Bil: "+bil+"\n";if(r.rep)t+="\nREP: "+r.rep.navn+": "+kr(r.rep.pris)+"\n";t+=blok((state.kunde==="politi"?"Materialer":"Dele")+" ("+r.antalDele+")",r.dele)+blok("Cosmetics",r.cos)+blok("Upgrades",r.upg);if(r.pct)t+="\nRabat "+r.pct+"%: -"+kr(r.rabat);return t+"\nTotal: "+kr(r.total)}
+$("kopier").onclick=async()=>{if(!alleLinjer(regn()).length){$("besked").textContent="Vælg mindst én ydelse først.";return}if(state.kunde==="politi"){const m=mangler();if(m.length){$("besked").textContent="Udfyld først: "+m.join(", ")+".";return}}const t=kvittering();try{await navigator.clipboard.writeText(t)}catch(e){const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}$("besked").textContent="Kvittering kopieret."};
+$("gem-civil").onclick=()=>{if(state.kunde!=="civil")return;const r=regn();if(!alleLinjer(r).length){$("besked").textContent="Vælg mindst én ydelse først.";return}const bil=TYPER.find(t=>t.id===state.type).navn,lines=[];if(r.rep)lines.push({navn:r.rep.navn,antal:1,sum:r.rep.pris});lines.push(...r.dele,...r.cos,...r.upg);const saved=hentCivil();saved.push({id:Date.now(),tid:nuStr(),kunde:$("kunde").value.trim(),bil,total:r.total,rabat:r.pct,linjer:lines});gemCivil(saved.slice(-100));state.historikTab="civil";tegnHistorikTabs();$("besked").textContent="Civilt kvittering gemt i historikken på denne browser."};
+$("gem").onclick=()=>{const r=regn();if(!alleLinjer(r).length){$("besked").textContent="Vælg mindst én ydelse først.";return}const m=mangler();if(m.length){$("besked").textContent="Udfyld først: "+m.join(", ")+".";return}const s=hentSager().slice();s.push(Object.assign(sagData(),{id:Date.now(),total:r.total,rep:r.rep?r.rep.navn:"",linjer:r.dele.map(l=>({navn:l.navn,antal:l.antal}))}));gemSager(s);const month=sagData().tid.slice(0,7);state.valgt={};state.repMode="auto";$("kunde").value="";$("rabat").value=0;nulstilSag();$("fak-maaned").value=month;tegnAlt();$("besked").textContent="Sag gemt på månedsfakturaen."};
+$("send").onclick=()=>{if(!alleLinjer(regn()).length){$("besked").textContent="Vælg mindst én ydelse først.";return}if(state.kunde==="politi"){const m=mangler();if(m.length){$("besked").textContent="Udfyld først: "+m.join(", ")+".";return}}sendDiscord(kvittering(),$("besked"))};
+$("fak-send").onclick=()=>{const{v}=valgtMaaned();if(!hentSager().some(x=>x.tid&&x.tid.startsWith(v))){$("fak-besked").textContent="Ingen sager at fakturere i denne måned.";return}sendDiscord(fakturaTekst(),$("fak-besked"))};
+$("webhook").onchange=()=>{try{localStorage.setItem(LS_WEBHOOK,$("webhook").value.trim())}catch(e){}};try{$("webhook").value=localStorage.getItem(LS_WEBHOOK)||""}catch(e){}
+$("fak-maaned").onchange=tegnFaktura;$("tab-faktura").onclick=()=>{state.historikTab="faktura";tegnHistorikTabs()};$("tab-civile").onclick=()=>{state.historikTab="civil";tegnHistorikTabs()};
+$("fak-kopier").onclick=async()=>{const{v}=valgtMaaned();if(!hentSager().some(x=>x.tid&&x.tid.startsWith(v))){$("fak-besked").textContent="Ingen sager at fakturere i denne måned.";return}try{await navigator.clipboard.writeText(fakturaTekst())}catch(e){const ta=document.createElement("textarea");ta.value=fakturaTekst();document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}$("fak-besked").textContent="Månedsfaktura kopieret."};
+$("nulstil").onclick=()=>{state.valgt={};state.repMode="auto";nulstilSag();$("kunde").value="";$("rabat").value=0;$("soeg").value="";$("besked").textContent="";tegnAlt()};$("soeg").oninput=tegnVarer;$("rabat").oninput=tegnSum;
+document.title="Prisliste – "+FIRMANAVN;$("sag-tid").value=nuStr();$("fak-maaned").value=nuStr().slice(0,7);$("firmanavn").textContent=FIRMANAVN;tegnAlt();
 </script>
 </body>
 </html>
