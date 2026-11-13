@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Medarbejdere – Benny’s Original Motor Works</title>
+<style>
+:root{--bg:#e9e4d6;--panel:#faf8f2;--ink:#141414;--muted:#6b6558;--line:#d3ccb8;--accent:#f2a900;--red:#b42318}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Bahnschrift,"Segoe UI",system-ui,Arial,sans-serif;line-height:1.45}header{background:var(--ink);color:#fff;padding:16px 24px;border-bottom:4px solid var(--accent)}main{max-width:760px;margin:24px auto;padding:0 16px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px;margin-bottom:16px}h1,h2{margin:0 0 12px}h1{font-size:1.35rem}.muted{color:var(--muted);font-size:.92rem}label{display:block;margin:10px 0;color:var(--muted)}input{display:block;width:100%;margin-top:4px;padding:10px;border:1px solid var(--line);border-radius:6px;font:inherit}.btn{padding:10px 14px;border:0;border-radius:6px;background:var(--ink);color:#fff;font:inherit;font-weight:700;cursor:pointer}.btn.secondary{background:transparent;border:1px solid #718096}.records{list-style:none;padding:0;margin:0}.records li{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line)}.records small{display:block;color:var(--muted)}.msg{min-height:1.4em;color:var(--muted)}.error{color:var(--red)}[hidden]{display:none!important}:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header><h1>Benny’s Original Motor Works – Medarbejdere</h1></header>
+<main>
+<section id="login-panel" class="panel" hidden>
+<h2>Log ind</h2><p class="muted">Brug dit fornavn, efternavn og din personlige kode.</p>
+<form id="login-form"><label>Fornavn<input id="first" autocomplete="given-name" required></label><label>Efternavn<input id="last" autocomplete="family-name" required></label><label>Kode<input id="password" type="password" autocomplete="current-password" required></label><button class="btn" type="submit">Log ind</button></form>
+<p id="login-message" class="msg" role="status"></p>
+</section>
+<section id="directory-panel" class="panel" hidden><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2>Medarbejderliste</h2><button id="logout" class="btn secondary">Log ud</button></div><p class="muted">Medarbejderoversigt. Vises kun for indloggede brugere.</p><ul id="employees" class="records"></ul><p id="directory-message" class="msg" role="status"></p></section>
+</main>
+<script>
+'use strict';
+const db=window.supabase.createClient('https://bejmzrxrxldfxxjqbkwm.supabase.co','sb_publishable_FvI-4lN_WXozMQJ8CIjRGw_UbhTH61Z');
+const $=id=>document.getElementById(id);
+function emailPart(value){return value.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'.').replace(/^\.|\.$/g,'')}
+function showLogin(message=''){$('login-panel').hidden=false;$('directory-panel').hidden=true;$('login-message').textContent=message;$('login-message').classList.toggle('error',!!message)}
+async function showDirectory(){ $('login-panel').hidden=true;$('directory-panel').hidden=false;await loadDirectory() }
+async function loadDirectory(){const list=$('employees'),message=$('directory-message');list.replaceChildren();message.textContent='Henter medarbejderlisten…';const{data,error}=await db.rpc('list_employee_directory');if(error){message.textContent='Medarbejderlisten kunne ikke hentes. Kontrollér, at den opdaterede supabase-staff-setup.sql er kørt: '+error.message;message.classList.add('error');return}message.classList.remove('error');message.textContent='';(data||[]).forEach(employee=>{const li=document.createElement('li'),name=document.createElement('span'),role=document.createElement('span'),small=document.createElement('small');name.textContent=employee.full_name||'Medarbejder';small.textContent=employee.role==='admin'?'Administrator':'Medarbejder';name.appendChild(small);role.textContent=employee.role==='admin'?'Administrator':'Medarbejder';li.append(name,role);list.appendChild(li)});if(!(data||[]).length)message.textContent='Ingen medarbejdere fundet.'}
+$('login-form').addEventListener('submit',async event=>{event.preventDefault();const first=$('first').value.trim(),last=$('last').value.trim(),password=$('password').value;if(!emailPart(first)||!emailPart(last)){showLogin('Indtast et gyldigt fornavn og efternavn.');return}$('login-message').textContent='Logger ind…';const{data,error}=await db.auth.signInWithPassword({email:`${emailPart(first)}.${emailPart(last)}@login.autoexotic.dk`,password});if(error){showLogin('Login mislykkedes. Tjek navn og kode.');return}await showDirectory()});
+$('logout').onclick=async()=>{await db.auth.signOut();showLogin()};
+db.auth.getSession().then(({data,error})=>{if(!error&&data.session)showDirectory();else showLogin()});
+db.auth.onAuthStateChange((_event,session)=>{if(!session)showLogin()});
+</script>
+</body>
+</html>
